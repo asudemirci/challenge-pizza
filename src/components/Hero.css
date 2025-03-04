@@ -1,0 +1,42 @@
+body {
+    margin: 0px;
+}
+
+.hero-title {
+    font-size: 2rem;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-text {
+    color: white;
+    margin-bottom: 3rem;
+    font-size: 70px;
+}
+@media (max-width: 1060px) {
+    .hero-text {
+      font-size: 50px;
+      margin-bottom: 2rem;
+    }
+  
+    .hero-btn {
+      padding: 12px 30px; 
+      font-size: 1.2rem;
+    }
+  }
+.hero-btn {
+    font-size: 1.5rem;
+    padding: 15px 40px;
+    background-color: #fdc913;
+    color: #333;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.hero-banner {
+    text-align: center;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
