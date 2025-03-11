@@ -6,6 +6,9 @@ const Hero = ({setCurrentStep}) => {
     <div className="hero-container">
         <div className="hero-banner">
             <section>
+                <h1 className="banner-title">Teknolojik Yemekler</h1>
+              </section>
+            <section>
                 <p className="hero-text">KOD ACIKTIRIR Pizza, DOYURUR</p>
             </section>
             <section>
