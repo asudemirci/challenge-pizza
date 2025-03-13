@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './OrderPage.css';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardTitle, Button, ListGroup, ListGroupItem } from 'reactstrap';
 
@@ -8,14 +9,15 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
     const [dough, setDough] = useState('');
     const [toppings, setToppings] = useState([]);
     const [notes, setNotes] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const basePrice = 85.5;
 
-    const handleSizeChange = (selectedSize) => {
-        setSize(selectedSize);
+    const handleSizeChange = (e) => {
+        setSize(e.target.value);
     }
-    const handleDoughSelect = (selectedDough) => {
-        setDough(selectedDough);
+    const handleDoughSelect = (e) => {
+        setDough(e.target.value);
     }
     const handleToppingChange = (e) => {
         const topping = e.target.value;
@@ -26,9 +28,9 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
         );
       }
     const handleQuantityChange = (type) => {
-        setQuantity((prev) => {
+        setQuantity((prev) => 
             type === 'increase' ? prev + 1 : prev > 1 ? prev - 1 : prev
-        })
+        )
     }
     const calculateTotal = () => {
         const toppingsPrice = toppings.length * 5;
@@ -36,14 +38,28 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
     }
     const totalPrice = calculateTotal();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (name.length < 3 || !size || !dough || toppings.length < 4) {
-            alert('Lütfen tüm zorunlu alanları doldurun.');
-            return;
-        }
+    const isFormValid = () => {
+      return (
+          name.trim().length >= 3 &&
+          size &&
+          dough &&
+          toppings.length >= 4 &&
+          toppings.length <= 10
+      );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    if (!isFormValid()) {
+        alert('Lütfen tüm zorunlu alanları doğru şekilde doldurun!');
+        setIsSubmitting(false);
+        return;
+    }
+
     const newOrder = {
-        isim: name, 
+        isim: name,
         boyut: size,
         hamur: dough,
         malzemeler: toppings,
@@ -51,9 +67,20 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
         miktar: quantity,
         toplamFiyat: calculateTotal(),
     };
-    setOrderData(newOrder);
-    setCurrentStep('confirmation');
-}
+
+    axios.post('https://reqres.in/api/pizza', newOrder)
+        .then((response) => {
+            console.log('API Yanıtı:', response.data);
+            setOrderData(response.data);
+            setCurrentStep('confirmation');
+            setIsSubmitting(false);
+        })
+        .catch((error) => {
+            console.error('Hata:', error);
+            setIsSubmitting(false);
+        });
+};
+
 
     return (
         <div>
@@ -111,7 +138,7 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
                                 name="size"
                                 value={sizeOption}
                                 checked={size === sizeOption}
-                                onChange={(e) => handleSizeChange(e.target.value)}
+                                onChange={handleSizeChange}
                                 />
                                {sizeOption}
                             </label>
@@ -126,7 +153,7 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
                             <select
                              className="dough-select"
                              value={dough}
-                             onChange={(e) => handleDoughSelect(e.target.value)}
+                             onChange={handleDoughSelect}
                             >
                                 <option value="">Hamur Kalınlığı</option>
                                 <option value="İnce">İncecik Hamur</option>
@@ -148,7 +175,7 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
                                    'Mısır',
                                    'Sucuk',
                                    'Kanada Jambonu',
-                                   'Sucuk',
+                                   'Zeytin',
                                    'Ananas',
                                    'Tavuk Izgara',
                                    'Jalepeno',
@@ -161,13 +188,27 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
                                           type="checkbox"
                                           value={topping}
                                           checked={toppings.includes(topping)}
-                                          onChange={(e) => handleToppingChange(e)}
+                                          onChange={handleToppingChange}
                                         />
                                         {topping}
                                     </label>
                                 ))}
                             </div>
                         </fieldset>
+                        <div className="name-section">
+                        <label htmlFor="name">
+                        İsim <span style={{ color: 'red' }}>*</span>
+                        <input
+                         id="name"
+                         type="text"
+                         value={name}
+                         onChange={(e) => setName(e.target.value)}
+                         minLength="3"
+                         required
+                         className="form-control"
+                         />
+                        </label>
+                        </div>
                         <div className="notes-section">
                             <label htmlFor="note" className="form-label">
                             <strong>Sipariş Notu</strong>
@@ -233,14 +274,17 @@ const OrderPage = ({setCurrentStep, setOrderData }) => {
                             </CardBody>
                             <div className="card-footer bg-transparent text-center p-0 border-0">
                     <Button
+                    onClick={handleSubmit} 
+                    type="submit"
                       style={{
                         backgroundColor: '#F4C542',
                         borderColor: '#F4C542',
                         color: '#000',
                         paddingTop: '12px',
                       }}
-                      className="w-100 fw-bold "
-                    >
+                      className="w-100 fw-bold order-button"
+                      disabled={!isFormValid() || isSubmitting}
+                      >
                       Sipariş Ver
                     </Button>
                   </div>

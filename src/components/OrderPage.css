@@ -128,18 +128,16 @@ label {
   }
   .size-choice input {
     transform: scale(1.2);
-    accent-color: #ce2829;
+
   }
   .dough-select {
     font-size: 16px;
-  background: white;
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 0.5rem;
   font-weight: 500;
   }
   .dough-select:focus {
-    border-color: #ce2829;
     outline: none;
   }
   .size-selection,
@@ -152,16 +150,13 @@ label {
 .order-summary {
   width: 100% !important;
   max-width: 690px;
-  margin: 0 auto;
-  margin-bottom: 2rem;
+  margin: 30px 0 20px;
 }
+
 .toppings-selection {
-  margin-bottom: 20px;
+  margin-bottom: 3rem;
 }
-.toppings-selection {
-  color: #444;
-  margin-bottom: 10px;
-}
+
 .toppings-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -179,11 +174,15 @@ label {
 .toppings-space input[type="checkbox"] {
   transform: scale(1.2);
 }
+.name-section {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
 .notes-section {
   width: 100%;
   max-width: 690px;
   margin: 0 auto;
-  padding: 60px 0 30px;
+  padding: 20px 0 30px;
   border-bottom: 1px solid black;
 }
 .form-label {
@@ -229,6 +228,26 @@ label {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
+.order-button {
+  background-color: #F4C542;
+  border-color: #F4C542;
+  color: black;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.order-button:hover {
+  background-color: #e0b42d; 
+}
+
+.disabled-button {
+  background-color: #ccc !important;
+  border-color: #ccc !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
 @media (max-width: 768px) {
   .size-dough-container {
     flex-direction: column;
