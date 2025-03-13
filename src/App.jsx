@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Hero from './components/Hero';
 import OrderPage from './components/OrderPage';
+import Confirmation from './components/Confirmation';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -17,6 +19,7 @@ function App() {
           setOrderData={setOrderData}
         />
       )}
+       {currentStep === 'confirmation' && <Confirmation orderData={orderData} />}
       </div>
 
   )
